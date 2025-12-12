@@ -1,0 +1,131 @@
+{{/*
+  Shortcode: photo
+
+  Params:
+    - src (required): image URL or Page resource path
+    - alt (optional): alt text
+    - caption (optional): text
+    - caption_pos (optional): above|below|left|right (default: below)
+    - overlay (optional): true|false — if true, caption+button overlay bottom-right of image
+    - info (optional): true|false — show info button to toggle camera details
+    - camera, lens, shutter, aperture, iso (optional): details for the info panel
+    - width, height (optional): CSS sizes (e.g., 100%, 520px)
+    - class (optional): extra classes for wrapper
+*/}}
+
+{{/* Register need for JS */}}
+{{ .Page.Scratch.SetInMap "dx-js-needed" "photo" true }}
+
+{{/* Inputs */}}
+{{ $src          := .Get "src" }}
+{{ $alt          := .Get "alt" | default "" }}
+{{ $caption      := .Get "caption" }}
+{{ $captionPos   := .Get "caption_pos" | default "below" }}
+
+{{- $overlay     := partial "dx/utils/bool.gohtml" (.Get "overlay") -}}
+{{- $infoEnabled := partial "dx/utils/bool.gohtml" (default "true" (.Get "info")) -}}
+{{- $capHTML := partial "dx/photo/caption.gohtml" (dict
+    "caption" $caption
+    "inner"   .InnerDeindent
+) -}}
+
+{{/* EXIF-ish info */}}
+{{- $exif := partial "dx/photo/exif.gohtml" (dict
+    "page"     .Page
+    "src"      $src
+    "camera"   (.Get "camera")
+    "lens"     (.Get "lens")
+    "shutter"  (.Get "shutter")
+    "aperture" (.Get "aperture")
+    "iso"      (.Get "iso")
+) -}}
+
+{{- $imgRes   := index $exif "imgRes" -}}
+{{- $camera   := index $exif "camera" -}}
+{{- $lens     := index $exif "lens" -}}
+{{- $shutter  := index $exif "shutter" -}}
+{{- $aperture := index $exif "aperture" -}}
+{{- $iso      := index $exif "iso" -}}
+
+{{/* Layout */}}
+{{ $width        := .Get "width" }}
+{{ $height       := .Get "height" }}
+{{ $extraClass   := .Get "class" }}
+
+
+{{ if not $src }}{{ errorf "shortcode 'photo': missing required param 'src'" }}{{ end }}
+
+{{/* Build the camera info string */}}
+{{ $hasMeta := or (or (or $camera $lens) (or $shutter $aperture)) $iso }}
+{{ $meta := slice }}
+{{ if $camera }}  {{ $meta = $meta | append $camera }} {{ end }}
+{{ if $lens }}    {{ $meta = $meta | append $lens }} {{ end }}
+{{ $exp := slice }}
+{{ if $shutter }} {{ $exp = $exp | append $shutter }} {{ end }}
+{{ if $aperture }}{{ $exp = $exp | append $aperture }}{{ end }}
+{{ if $iso }}     {{ $exp = $exp | append $iso }} {{ end }}
+{{ if gt (len $exp) 0 }}{{ $meta = $meta | append (delimit $exp " • ") }}{{ end }}
+{{ $metaLine := delimit $meta " — " }}
+
+{{/* Resolve Page Resource */}}
+{{ $img := $src }}
+{{ with $imgRes }}
+    {{ $img = .RelPermalink }}
+{{ else }}
+    {{ with .Page.Resources.GetMatch $src }}{{ $img = .RelPermalink }}{{ end }}
+{{ end }}
+
+{{ $uid := printf "photo-%d" now.UnixNano }}
+{{ $isSide := or (eq $captionPos "left") (eq $captionPos "right") }}
+
+<div class="photo {{ $extraClass }} {{ if $isSide }}photo--side photo--{{ $captionPos }}{{ else }}photo--stack photo--{{ $captionPos }}{{ end }} {{ if $overlay }}photo--overlay{{ end }}"
+     id="{{ $uid }}"
+     {{ if or $width $height }}style="{{ with $width }}--photo-w: {{ . }};{{ end }} {{ with $height }}--photo-h: {{ . }};{{ end }}"{{ end }}>
+    {{ if and $capHTML (and (not $isSide) (eq $captionPos "above")) }}
+    <div class="photo__bar photo__bar--top">
+        <div class="photo__caption">{{ $capHTML | safeHTML }}</div>
+    </div>
+    {{ end }}
+    <div class="photo__media-wrap" style="position:relative;">
+        <img class="photo__img" src="{{ $img }}" alt="{{ $alt | htmlEscape }}">
+        {{ if and $overlay $infoEnabled }}
+        <div class="photo__overlay" style="position:absolute;right:.5rem;bottom:.5rem;z-index:2;">
+            <button class="photo__info-btn" type="button" aria-controls="{{ $uid }}-info" aria-expanded="false" title="Camera info">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none" stroke-width="2"/>
+                    <line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="12" cy="7" r="1.5" fill="currentColor"/>
+                </svg>
+            </button>
+        </div>
+        <div id="{{ $uid }}-info" class="photo__overlaybar is-hidden" role="region" aria-live="polite" style="position:absolute;left:0;right:0;bottom:0;z-index:1;border-bottom-left-radius:.4rem;border-bottom-right-radius:.4rem;">
+            <span class="photo__meta-text">{{ if $hasMeta }}{{ $metaLine }}{{ else }}Camera details not available{{ end }}</span>
+        </div>
+        {{ end }}
+    </div>
+    {{ if and (not $overlay) $infoEnabled }}
+    <div class="photo__meta" role="region" aria-live="polite">
+        <span id="{{ $uid }}-info" class="photo__meta-text is-hidden">{{ if $hasMeta }}{{ $metaLine }}{{ else }}Camera details not available{{ end }}</span>
+        <button class="photo__info-btn" type="button" aria-controls="{{ $uid }}-info" aria-expanded="false" title="Camera info">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none" stroke-width="2"/>
+                <line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="12" cy="7" r="1.5" fill="currentColor"/>
+            </svg>
+        </button>
+    </div>
+    {{ end }}
+
+    {{ if and $capHTML $isSide }}
+    <div class="photo__side">
+        <div class="photo__caption">{{ $capHTML | safeHTML }}</div>
+    </div>
+    {{ end }}
+
+    {{ if and $capHTML (and (not $isSide) (ne $captionPos "above")) }}
+    <div class="photo__bar photo__bar--bottom">
+        <div class="photo__caption">{{ $capHTML | safeHTML }}</div>
+    </div>
+    {{ end }}
+</div>
+ 

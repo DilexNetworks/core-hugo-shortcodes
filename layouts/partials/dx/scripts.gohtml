@@ -1,0 +1,14 @@
+{{- $need := .Page.Scratch.Get "dx-js-needed" -}}
+{{- if $need -}}
+
+  {{/* photo */}}
+  {{- if index $need "photo" -}}
+    {{- with resources.Get "js/dx-photo.js" -}}
+      {{- $js := . | minify | fingerprint -}}
+      <script defer src="{{ $js.RelPermalink }}"></script>
+    {{- else -}}
+      {{- warnf "dx/scripts: missing asset js/dx-photo.js" -}}
+    {{- end -}}
+  {{- end -}}
+
+{{- end -}}

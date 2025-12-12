@@ -1,0 +1,2 @@
+{{- $v := lower (printf "%v" .) -}}
+{{- or (eq $v "true") (eq $v "1") (eq $v "yes") (eq $v "on") -}}

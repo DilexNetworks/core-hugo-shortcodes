@@ -1,0 +1,23 @@
+{{ define "main" }}
+  {{ .Content }}
+
+  <h2>Docs</h2>
+  {{- $shortcodePages := where .Site.RegularPages "Section" "shortcodes" -}}
+  {{- $pages := $shortcodePages -}}
+  {{- $showSection := false -}}
+  {{- if not (gt (len $shortcodePages) 0) -}}
+    {{- $pages = .Site.RegularPages -}}
+    {{- $showSection = true -}}
+  {{- end -}}
+
+  <div class="dx-grid">
+    {{- range $pages -}}
+      <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
+        <div class="dx-card__title">{{ .Title }}</div>
+        {{- if $showSection -}}
+          <div class="dx-pill">{{ .Section }}</div>
+        {{- end -}}
+      </a>
+    {{- end -}}
+  </div>
+{{ end }}

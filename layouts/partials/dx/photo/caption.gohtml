@@ -1,0 +1,8 @@
+{{- $caption := .caption -}}
+{{- $inner   := .inner -}}
+
+{{- if gt (len (trim " \t\r\n" $inner)) 0 -}}
+  {{- $inner | markdownify -}}
+{{- else if $caption -}}
+  {{- printf "<p class=\"photo__title\">%s</p>" ($caption | markdownify) | safeHTML -}}
+{{- end -}}

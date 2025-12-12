@@ -1,0 +1,61 @@
+{{/*
+  Resolves image resource and normalizes EXIF metadata.
+  Param values take precedence over EXIF.
+  Returns: imgRes, camera, lens, shutter, aperture, iso
+*/}}
+
+{{- $ctx := . -}}
+{{- $src := $ctx.src -}}
+
+{{- $out := dict
+  "imgRes" nil
+  "camera" $ctx.camera
+  "lens" $ctx.lens
+  "shutter" $ctx.shutter
+  "aperture" $ctx.aperture
+  "iso" $ctx.iso
+-}}
+
+{{- $imgRes := $ctx.page.Resources.GetMatch $src -}}
+{{- if not $imgRes -}}
+  {{- with resources.Get $src -}}
+    {{- $imgRes = . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $imgRes -}}
+  {{- with $imgRes.Exif -}}
+    {{- if not $out.camera -}}
+      {{- $out = merge $out (dict "camera" (index .Tags "Model")) -}}
+    {{- end -}}
+    {{- if not $out.lens -}}
+      {{- $out = merge $out (dict "lens" (or (index .Tags "LensModel") (index .Tags "Lens"))) -}}
+    {{- end -}}
+    {{- if not $out.shutter -}}
+      {{- $out = merge $out (dict "shutter" (or (index .Tags "ExposureTime") (index .Tags "ShutterSpeedValue"))) -}}
+    {{- end -}}
+
+    {{- if and (not $out.aperture) (index .Tags "FNumber") -}}
+      {{- $raw := printf "%v" (index .Tags "FNumber") -}}
+      {{- $val := 0.0 -}}
+      {{- if in $raw "/" -}}
+        {{- $p := split $raw "/" -}}
+        {{- if ne (float (index $p 1)) 0 -}}
+          {{- $val = div (float (index $p 0)) (float (index $p 1)) -}}
+        {{- end -}}
+      {{- else -}}
+        {{- $val = float $raw -}}
+      {{- end -}}
+      {{- $out = merge $out (dict "aperture" (printf "ƒ/%.1f" $val)) -}}
+    {{- end -}}
+
+    {{- with (or (index .Tags "ISOSpeed") (index .Tags "ISO")) -}}
+      {{- if not $out.iso -}}
+        {{- $out = merge $out (dict "iso" (printf "ISO %v" .)) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $out = merge $out (dict "imgRes" $imgRes) -}}
+{{- return $out -}}

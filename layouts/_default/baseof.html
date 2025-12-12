@@ -1,0 +1,142 @@
+{{ define "main" }}
+  {{ .Content }}
+
+  <h2>Docs</h2>
+  {{- $shortcodePages := where .Site.RegularPages "Section" "shortcodes" -}}
+  {{- $pages := $shortcodePages -}}
+  {{- $showSection := false -}}
+  {{- if not (gt (len $shortcodePages) 0) -}}
+    {{- $pages = .Site.RegularPages -}}
+    {{- $showSection = true -}}
+  {{- end -}}
+
+  <div class="dx-grid">
+    {{- range $pages -}}
+      <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
+        <div class="dx-card__title">{{ .Title }}</div>
+        {{- if $showSection -}}
+          <div class="dx-pill">{{ .Section }}</div>
+        {{- end -}}
+      </a>
+    {{- end -}}
+  </div>
+{{ end }}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ if .Title }}{{ .Title }} | {{ end }}{{ .Site.Title }}</title>
+    {{ with resources.Get "css/30-photo.css" }}<link rel="stylesheet" href="{{ .RelPermalink }}">{{ end }}
+    <style>
+      :root{
+        --bg:#ffffff; --fg:#0f172a; --muted:#475569; --border:#e2e8f0;
+        --card:#ffffff; --code-bg:#0b1220; --code-fg:#e2e8f0;
+        --link:#2563eb; --link-hover:#1d4ed8;
+        --radius:.75rem;
+        --maxw: 78ch;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#0b1220; --fg:#e2e8f0; --muted:#94a3b8; --border:#1f2a3a;
+          --card:#0f172a; --code-bg:#0b1220; --code-fg:#e2e8f0;
+          --link:#60a5fa; --link-hover:#93c5fd;
+        }
+      }
+      html,body{height:100%}
+      body{
+        margin:0; background:var(--bg); color:var(--fg);
+        font-family:var(--sans); line-height:1.6;
+      }
+      a{color:var(--link); text-decoration:none}
+      a:hover{color:var(--link-hover); text-decoration:underline}
+      header{
+        border-bottom:1px solid var(--border);
+        position:sticky; top:0; z-index:20;
+        background: color-mix(in srgb, var(--bg) 88%, transparent);
+        backdrop-filter:saturate(120%) blur(8px);
+        -webkit-backdrop-filter:saturate(120%) blur(8px);
+      }
+      .dx-wrap{max-width:calc(var(--maxw) + 2rem); margin:0 auto; padding:1.25rem 1rem}
+      .dx-brand{display:flex; align-items:center; justify-content:space-between; gap:1rem}
+      .dx-title{font-weight:700; letter-spacing:.2px}
+      .dx-sub{color:var(--muted); font-size:.9rem}
+      main .dx-wrap{padding-top:1.5rem; padding-bottom:3rem}
+
+      article{max-width:var(--maxw)}
+      h1,h2,h3{line-height:1.2; margin:1.6rem 0 .75rem}
+      h1{font-size:2rem} h2{font-size:1.4rem} h3{font-size:1.15rem}
+      p,ul,ol{margin:.75rem 0}
+      ul,ol{padding-left:1.25rem}
+      li{margin:.25rem 0}
+      hr{border:0; border-top:1px solid var(--border); margin:1.5rem 0}
+
+      code,pre{font-family:var(--mono)}
+      code{
+        background: color-mix(in srgb, var(--bg) 92%, transparent);
+        border:1px solid var(--border);
+        padding:.1rem .35rem; border-radius:.4rem; font-size:.9em;
+      }
+      pre{
+        background:var(--code-bg); color:var(--code-fg);
+        padding:1rem; border-radius:var(--radius);
+        overflow:auto; border:1px solid color-mix(in srgb, var(--border) 35%, transparent);
+      }
+      pre code{background:transparent; border:0; padding:0; color:inherit}
+
+      .dx-kbd{font-family:var(--mono); font-size:.85em; padding:.15rem .35rem; border:1px solid var(--border); border-radius:.35rem; background: color-mix(in srgb, var(--bg) 92%, transparent)}
+      .dx-list{list-style:none; padding:0; margin:.75rem 0}
+      .dx-list li{margin:.35rem 0}
+      .dx-list a{display:inline-flex; gap:.5rem; align-items:baseline}
+      .dx-pill{font-size:.8em; color:var(--muted)}
+
+      .dx-grid{
+        display:grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: .9rem;
+        margin: .9rem 0 0;
+      }
+      .dx-card{
+        background:var(--card);
+        border:1px solid var(--border);
+        border-radius:var(--radius);
+        padding: .95rem 1rem;
+      }
+      .dx-card--link{
+        transition: transform .08s ease, border-color .08s ease, box-shadow .08s ease;
+      }
+      .dx-card--link:hover{
+        text-decoration:none;
+        border-color: color-mix(in srgb, var(--border) 60%, var(--link));
+        box-shadow: 0 8px 20px color-mix(in srgb, var(--border) 25%, transparent);
+        transform: translateY(-1px);
+      }
+      .dx-card__title{
+        font-weight: 650;
+        letter-spacing: .1px;
+        margin-bottom: .25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="dx-wrap">
+        <div class="dx-brand">
+          <div>
+            <div class="dx-title"><a href="{{ "/" | relURL }}">{{ .Site.Title }}</a></div>
+            <div class="dx-sub">Shortcode docs &amp; examples</div>
+          </div>
+          <div class="dx-sub">Run: <span class="dx-kbd">hugo server -D</span></div>
+        </div>
+      </div>
+    </header>
+
+    <main><div class="dx-wrap">
+      {{ block "main" . }}{{ end }}
+    </div></main>
+    {{ partial "dx/scripts.html" . }}
+  </body>
+</html>
