@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html lang="en">
   <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
@@ -68,6 +70,33 @@
       .dx-list li{margin:.35rem 0}
       .dx-list a{display:inline-flex; gap:.5rem; align-items:baseline}
       .dx-pill{font-size:.8em; color:var(--muted)}
+
+      .dx-grid{
+        display:grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: .9rem;
+        margin: .9rem 0 0;
+      }
+      .dx-card{
+        background:var(--card);
+        border:1px solid var(--border);
+        border-radius:var(--radius);
+        padding: .95rem 1rem;
+      }
+      .dx-card--link{
+        transition: transform .08s ease, border-color .08s ease, box-shadow .08s ease;
+      }
+      .dx-card--link:hover{
+        text-decoration:none;
+        border-color: color-mix(in srgb, var(--border) 60%, var(--link));
+        box-shadow: 0 8px 20px color-mix(in srgb, var(--border) 25%, transparent);
+        transform: translateY(-1px);
+      }
+      .dx-card__title{
+        font-weight: 650;
+        letter-spacing: .1px;
+        margin-bottom: .25rem;
+      }
     </style>
   </head>
   <body>

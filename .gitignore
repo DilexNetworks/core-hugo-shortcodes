@@ -1,0 +1,9 @@
+resources/
+public/
+.hugo_build.lock
+go.sum
+hugo_stats.json
+*.swp
+.idea/
+
+.DS_Store

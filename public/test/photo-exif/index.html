@@ -5,7 +5,7 @@
   <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Photo EXIF Test | Dilex Hugo Shortcodes</title>
+    <title>photo - Photo Display with captions and EXIF | Dilex Hugo Shortcodes</title>
     <link rel="stylesheet" href="/css/30-photo.css">
     <style>
       :root{
@@ -115,8 +115,53 @@
     <main><div class="dx-wrap">
       
   <article>
-    <h1>Photo EXIF Test</h1>
-    <h2 id="no-overrides-should-read-exif">No overrides (should read EXIF)</h2>
+    <h1>photo - Photo Display with captions and EXIF</h1>
+    <p>The photo shortcode was built to display images with captions and EXIF data.  Wrapping this in a <em>bbox</em>
+shortcode is a nice way to make a callout box around the image.</p>
+<h2 id="usage">Usage</h2>
+<ul>
+<li><code>src</code> (required): image URL or Page resource path</li>
+<li><code>alt</code> (optional): alt text</li>
+<li><code>caption</code> (optional): text</li>
+<li><code>caption_pos</code> (optional): <code>above|below|left|right</code> (default: <code>below</code>)</li>
+<li><code>overlay</code> (optional): <code>true|false</code> — if true, caption+button overlay bottom-right of image</li>
+<li><code>info</code> (optional): true|false — show info button to toggle camera details</li>
+<li><code>camera</code>, <code>lens</code>, <code>shutter</code>, <code>aperture</code>, <code>iso</code> (optional): details for the info panel</li>
+<li><code>width</code>, <code>height</code> (optional): CSS sizes (e.g., <code>100%</code>, <code>520px</code>)</li>
+<li><code>class</code> (optional): extra classes for wrapper</li>
+</ul>
+<h3 id="examples">Examples</h3>
+<p>This example will display an image with a caption below it.  It will also
+put a small info icon in the bottom right corner of the image that, when
+clicked, will pop up the EXIF data for the image (<code>info=true</code>).</p>
+<pre tabindex="0"><code>{{&lt; photo 
+    src=&#34;images/HarbourFog.jpg&#34;
+    alt=&#34;Fog Rolling in at St. John&#39;s Harbour&#34;
+    caption_pos=&#34;below&#34;
+    width=&#34;100%&#34; 
+    overlay=&#34;true&#34;
+    info=&#34;true&#34;&gt;}}
+This image was post processed with Nik Tools Color Efex 6. 
+{{&lt; /photo &gt;}}
+</code></pre><p>This example shows how to override the EXIF data that is pulled from the
+image.  This can come in handy when EXIF data is incorrect, like maybe you
+were using a lens on an adapter so the camera could not identify it, or just
+plain missing like in the case where the image came from a film camera.</p>
+<p>For aperture, you need to add the <code>ƒ</code> manually (if you want it)</p>
+<pre tabindex="0"><code>{{&lt; photo 
+    src=&#34;images/HarbourFog.jpg&#34;
+    alt=&#34;Fog Rolling in at St. John&#39;s Harbour&#34;
+    caption_pos=&#34;below&#34;
+    camera=&#34;Leica R8&#34;
+    lens=&#34;Leica R Summicron 1:2/90mm&#34;
+    aperture=&#34;ƒ/?&#34;
+    width=&#34;100%&#34; 
+    overlay=&#34;true&#34;
+    info=&#34;true&#34;&gt;}}
+This image was post processed with Nik Tools Color Efex 6. 
+{{&lt; /photo &gt;}}
+</code></pre><h2 id="examples-1">Examples</h2>
+<h3 id="no-overrides-should-read-exif">No overrides (should read EXIF)</h3>
 
 
 
@@ -156,14 +201,14 @@
 
 
 <div class="photo  photo--stack photo--below photo--overlay"
-     id="photo-1765581744405374000"
+     id="photo-1765583403769538000"
      >
     
     <div class="photo__media-wrap" style="position:relative;">
         <img class="photo__img" src="/test/photo-exif/test.jpg" alt="">
         
         <div class="photo__overlay" style="position:absolute;right:.5rem;bottom:.5rem;z-index:2;">
-            <button class="photo__info-btn" type="button" aria-controls="photo-1765581744405374000-info" aria-expanded="false" title="Camera info">
+            <button class="photo__info-btn" type="button" aria-controls="photo-1765583403769538000-info" aria-expanded="false" title="Camera info">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none" stroke-width="2"/>
                     <line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -171,7 +216,7 @@
                 </svg>
             </button>
         </div>
-        <div id="photo-1765581744405374000-info" class="photo__overlaybar is-hidden" role="region" aria-live="polite" style="position:absolute;left:0;right:0;bottom:0;z-index:1;border-bottom-left-radius:.4rem;border-bottom-right-radius:.4rem;">
+        <div id="photo-1765583403769538000-info" class="photo__overlaybar is-hidden" role="region" aria-live="polite" style="position:absolute;left:0;right:0;bottom:0;z-index:1;border-bottom-left-radius:.4rem;border-bottom-right-radius:.4rem;">
             <span class="photo__meta-text">LEICA M11 — Super-Elmar-M 1:3.4/21 ASPH. — 1/8 • ƒ/8.0 • ISO 500</span>
         </div>
         
@@ -187,7 +232,7 @@
     
 </div>
  
-<h2 id="with-overrides-should-prefer-params">With overrides (should prefer params)</h2>
+<h3 id="with-overrides-should-prefer-params">With overrides (should prefer params)</h3>
 
 
 
@@ -227,14 +272,14 @@
 
 
 <div class="photo  photo--stack photo--below photo--overlay"
-     id="photo-1765581744405508000"
+     id="photo-1765583403770105000"
      >
     
     <div class="photo__media-wrap" style="position:relative;">
         <img class="photo__img" src="/test/photo-exif/test.jpg" alt="">
         
         <div class="photo__overlay" style="position:absolute;right:.5rem;bottom:.5rem;z-index:2;">
-            <button class="photo__info-btn" type="button" aria-controls="photo-1765581744405508000-info" aria-expanded="false" title="Camera info">
+            <button class="photo__info-btn" type="button" aria-controls="photo-1765583403770105000-info" aria-expanded="false" title="Camera info">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none" stroke-width="2"/>
                     <line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -242,7 +287,7 @@
                 </svg>
             </button>
         </div>
-        <div id="photo-1765581744405508000-info" class="photo__overlaybar is-hidden" role="region" aria-live="polite" style="position:absolute;left:0;right:0;bottom:0;z-index:1;border-bottom-left-radius:.4rem;border-bottom-right-radius:.4rem;">
+        <div id="photo-1765583403770105000-info" class="photo__overlaybar is-hidden" role="region" aria-live="polite" style="position:absolute;left:0;right:0;bottom:0;z-index:1;border-bottom-left-radius:.4rem;border-bottom-right-radius:.4rem;">
             <span class="photo__meta-text">My Camera — Super-Elmar-M 1:3.4/21 ASPH. — 1/8 • ƒ/8.0 • ISO 800</span>
         </div>
         
