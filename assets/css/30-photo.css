@@ -140,6 +140,24 @@
 .photo.photo--side .photo__media-wrap { grid-area: media; }
 .photo.photo--side .photo__side { grid-area: side; }
 
+/* Mobile: side captions collapse to stacked (caption below image) */
+@media (max-width: 640px) {
+  /* Override more-specific left/right rules */
+  .photo.photo--side,
+  .photo.photo--side.photo--left,
+  .photo.photo--side.photo--right {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "media"
+      "side";
+    gap: 0.6rem;
+  }
+
+  .photo.photo--side .photo__side {
+    align-items: flex-start;
+  }
+}
+
 /* Caption blocks */
 .photo__bar,
 .photo__side {

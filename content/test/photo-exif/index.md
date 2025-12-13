@@ -62,7 +62,12 @@ This image was post processed with Nik Tools Color Efex 6.
 Test it out!
 {{< /photo >}}
 
-### With overrides (should prefer params)
-{{< photo src="test.jpg" camera="My Camera" iso="ISO 800" >}}
-Test it out! *With overrides (should prefer params)*
+### With EXIF overrides (should prefer params)
+{{< photo src="test.jpg" camera="My Camera" 
+    iso="ISO 800" 
+    caption_pos="left" >}}
+Test it out! This is a fairly long caption that should be on the
+left side of the image.  If the web browser is less than 640px - like
+on a mobile phone - the caption will be below the image.
+*With overrides (should prefer params)*
 {{< /photo >}}
