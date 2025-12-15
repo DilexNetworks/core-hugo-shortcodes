@@ -1,0 +1,48 @@
+{{/* dx: code block w/ optional copy button + optional line numbers */}}
+
+{{ .Page.Scratch.SetInMap "dx-js-needed" "code" true }}
+
+{{- $lang := .Get "lang" | default "text" -}}
+{{- $copyParam := lower (.Get "copy" | default "true") -}}
+{{- $copy := or (eq $copyParam "true") (eq $copyParam "1") (eq $copyParam "yes") (eq $copyParam "on") -}}
+{{- $lnParam := lower (.Get "linenos" | default "false") -}}
+{{- $linenos := or (eq $lnParam "true") (eq $lnParam "1") (eq $lnParam "yes") (eq $lnParam "on") -}}
+{{- $title := .Get "title" -}}
+{{- $file := .Get "file" -}}
+
+{{- $code := "" -}}
+{{- if $file -}}
+  {{/* Prefer page resources (bundle), else fall back to readFile relative to project root */}}
+  {{- $res := .Page.Resources.GetMatch $file -}}
+  {{- if $res -}}
+    {{- $code = $res.Content -}}
+  {{- else -}}
+    {{- $code = readFile $file -}}
+  {{- end -}}
+
+{{- else -}}
+  {{- $code = .InnerDeindent -}}
+{{- end -}}
+
+{{- /* If the shortcode body starts on the next line, strip exactly one leading newline */ -}}
+{{- $code = $code | replaceRE "^\\r?\\n" "" -}}
+
+{{- $opts := "" -}}
+{{- if $linenos -}}
+  {{- $opts = "linenos=true" -}}
+{{- end -}}
+
+<div class="dx-code" data-dx-code>
+  {{- if or $title $copy -}}
+    <div class="dx-code__bar">
+      {{- if $title -}}<div class="dx-code__title">{{ $title }}</div>{{- else -}}<div></div>{{- end -}}
+      {{- if $copy -}}
+        <button class="dx-code__copy" type="button" data-dx-code-copy aria-label="Copy code">Copy</button>
+      {{- end -}}
+    </div>
+  {{- end -}}
+
+  <div class="dx-code__body" data-dx-code-body>
+    {{ highlight $code $lang $opts }}
+  </div>
+</div>

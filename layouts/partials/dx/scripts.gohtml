@@ -11,4 +11,12 @@
     {{- end -}}
   {{- end -}}
 
+  {{/* code */}}
+  {{- if index $need "code" -}}
+      {{- with resources.Get "js/dx-code.js" -}}
+          {{- $js := . | minify | fingerprint -}}
+          <script defer src="{{ $js.RelPermalink }}"></script>
+      {{- end -}}
+  {{- end -}}
+
 {{- end -}}

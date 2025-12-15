@@ -1,3 +1,11 @@
 baseURL = "http://localhost/"
 title = "Dilex Hugo Shortcodes"
 disableKinds = ["taxonomy", "term", "RSS", "sitemap", "robotsTXT"]
+
+[markup]
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    noClasses = true
+    style = "github-dark"

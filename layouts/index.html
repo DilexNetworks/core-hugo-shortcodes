@@ -1,7 +1,35 @@
 {{ define "main" }}
   {{ .Content }}
 
-  <h2>Docs</h2>
+  <h2>Getting started</h2>
+  <div class="dx-grid dx-grid--wide">
+
+    {{ with site.GetPage "fragments/install" }}
+      <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
+        <div class="dx-card__title">{{ .Title }}</div>
+        {{- $blurb := .Params.summary | default .Description | default (.Summary | plainify) -}}
+        <p class="dx-sub">{{ $blurb | replaceRE "\\s+" " " | truncate 120 }}</p>
+      </a>
+    {{ end }}
+
+    {{ with site.GetPage "fragments/design-notes" }}
+      <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
+        <div class="dx-card__title">{{ .Title }}</div>
+        {{- $blurb := .Params.summary | default .Description | default (.Summary | plainify) -}}
+        <p class="dx-sub">{{ $blurb | replaceRE "\\s+" " " | truncate 120 }}</p>
+      </a>
+    {{ end }}
+
+      {{ with site.GetPage "fragments/why-namespaced" }}
+      <a class="dx-card dx-card--link" href="{{ .RelPermalink }}">
+          <div class="dx-card__title">{{ .Title }}</div>
+          {{- $blurb := .Params.summary | default .Description | default (.Summary | plainify) -}}
+          <p class="dx-sub">{{ $blurb | replaceRE "\\s+" " " | truncate 120 }}</p>
+      </a>
+      {{ end }}
+  </div>
+
+  <h2>Shortcodes</h2>
   {{- $shortcodePages := where .Site.RegularPages "Section" "shortcodes" -}}
   {{- $pages := $shortcodePages -}}
   {{- $showSection := false -}}

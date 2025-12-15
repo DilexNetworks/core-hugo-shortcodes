@@ -1,5 +1,5 @@
 ---
-title: "photo - Photo Display with captions and EXIF"
+title: "dx/photo - Photo Display with Captions and EXIF Data"
 ---
 
 The photo shortcode was built to display images with captions and EXIF data.  Wrapping this in a *bbox*
@@ -23,8 +23,8 @@ This example will display an image with a caption below it.  It will also
 put a small info icon in the bottom right corner of the image that, when
 clicked, will pop up the EXIF data for the image (`info=true`).
 
-```
-{{</* photo 
+```go-html-template
+{{</* dx/photo 
     src="images/HarbourFog.jpg"
     alt="Fog Rolling in at St. John's Harbour"
     caption_pos="below"
@@ -32,7 +32,7 @@ clicked, will pop up the EXIF data for the image (`info=true`).
     overlay="true"
     info="true">}}
 This image was post processed with Nik Tools Color Efex 6. 
-{{< /photo */>}}
+{{< /dx/photo */>}}
 ```
 
 This example shows how to override the EXIF data that is pulled from the
@@ -41,8 +41,8 @@ were using a lens on an adapter so the camera could not identify it, or just
 plain missing like in the case where the image came from a film camera.
 
 For aperture, you need to add the `ƒ` manually (if you want it)
-```
-{{</* photo 
+```go-html-template
+{{</* dx/photo 
     src="images/HarbourFog.jpg"
     alt="Fog Rolling in at St. John's Harbour"
     caption_pos="below"
@@ -53,21 +53,38 @@ For aperture, you need to add the `ƒ` manually (if you want it)
     overlay="true"
     info="true">}}
 This image was post processed with Nik Tools Color Efex 6. 
-{{< /photo */>}}
+{{< /dx/photo */>}}
 ```
 
 ## Examples
-### No overrides (should read EXIF)
-{{< photo src="test.jpg" >}}
-Test it out!
-{{< /photo >}}
+### Getting EXIF from image
 
-### With EXIF overrides (should prefer params)
-{{< photo src="test.jpg" camera="My Camera" 
+```go-html-template
+{{</* dx/photo src="test.jpg" >}}
+Test it out!
+{{< /dx/photo */>}}
+```
+{{< dx/photo src="test.jpg" >}}
+Test it out!
+{{< /dx/photo >}}
+
+### Overriding EXIF data from image 
+
+```go-html-template
+{{</* dx/photo src="test.jpg" camera="My Camera"
+iso="ISO 800"
+caption_pos="left" >}}
+...long caption...
+{{< /dx/photo */>}}
+```
+
+{{< dx/photo src="test.jpg" camera="My Camera" 
     iso="ISO 800" 
     caption_pos="left" >}}
 Test it out! This is a fairly long caption that should be on the
 left side of the image.  If the web browser is less than 640px - like
 on a mobile phone - the caption will be below the image.
-*With overrides (should prefer params)*
-{{< /photo >}}
+
+In this example, we are overriding the EXIF data on the
+image so that the camera type will show up as **My Camera**, ISO is **800**, etc.  This can be useful if the EXIF data is wrong, you want to hide something for some reason, or maybe you are using an App on a mobile phone and you want the name of the app to show up as opposed to the type of phone. 
+{{< /dx/photo >}}
