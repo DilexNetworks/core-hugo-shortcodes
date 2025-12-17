@@ -19,4 +19,14 @@
       {{- end -}}
   {{- end -}}
 
+  {{/* compare */}}
+  {{- if index $need "compare" -}}
+    {{- with resources.Get "js/dx-compare.js" -}}
+      {{- $js := . | minify | fingerprint -}}
+      <script defer src="{{ $js.RelPermalink }}"></script>
+    {{- else -}}
+      {{- warnf "dx/scripts: missing asset js/dx-compare.js" -}}
+    {{- end -}}
+  {{- end -}}
+
 {{- end -}}

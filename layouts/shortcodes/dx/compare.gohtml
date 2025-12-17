@@ -137,16 +137,25 @@ params:
 ---*/}}
 
 {{ $mode := .Get "mode" | default "side" }}
+{{- /* Defaults */ -}}
+{{- $lAlt := .Get "left_alt"  | default "" -}}
+{{- $rAlt := .Get "right_alt" | default "" -}}
 
 {{/* Common params */}}
-{{ $split := .Get "width" | default "50:50" }}
-{{ $parts := split $split ":" }}
-{{ $leftW  := index $parts 0 | default "50" }}
-{{ $rightW := index $parts 1 | default "50" }}
-{{ $gap    := .Get "gap" | default "1rem" }}
+{{- $split := .Get "width" | default "50:50" -}}
+{{- $parts := split $split ":" -}}
+{{- $leftW := "50" -}}
+{{- $rightW := "50" -}}
+{{- if ge (len $parts) 2 -}}
+  {{- $leftW = index $parts 0 | default "50" -}}
+  {{- $rightW = index $parts 1 | default "50" -}}
+{{- else if ge (len $parts) 1 -}}
+  {{- $leftW = index $parts 0 | default "50" -}}
+  {{- $rightW = "50" -}}
+{{- end -}}
+{{- $gap := .Get "gap" | default "1rem" -}}
 
 {{ $lSrc := .Get "left_src" }}
-{{ $lAlt := .Get "left_alt" }}
 {{ $lCredit := .Get "left_credit" }}
 {{ $lAlign  := .Get "left_credit_align"  | default "left" }}
 {{ $lBg     := .Get "left_credit_bg"     | default "rgba(0,0,0,0.55)" }}
@@ -154,7 +163,6 @@ params:
 {{ $lCap    := .Get "left_caption" }}
 
 {{ $rSrc := .Get "right_src" }}
-{{ $rAlt := .Get "right_alt" }}
 {{ $rCredit := .Get "right_credit" }}
 {{ $rAlign  := .Get "right_credit_align" | default "right" }}
 {{ $rBg     := .Get "right_credit_bg"    | default "rgba(0,0,0,0.55)" }}
@@ -163,16 +171,36 @@ params:
 
 {{ if eq $mode "slider" }}
   {{/* ---------- SLIDER MODE ---------- */}}
+  {{ .Page.Scratch.SetInMap "dx-js-needed" "compare" true }}
   {{ $pos := .Get "slider_pos" | default "50" }}      {{/* % */}}
   {{ $labL := .Get "slider_label_left"  | default "" }}
   {{ $labR := .Get "slider_label_right" | default "" }}
   {{ $id := printf "sc-slider-%d" now.UnixNano }}
-  {{ $sHeight := .Get "slider_height" }}
-  {{ $sAspect := .Get "slider_aspect" }}
+  {{- $sHeight := .Get "slider_height" -}}
+
+  {{- /* If slider_height is not set, the stage needs an aspect ratio or it collapses (all children are absolutely positioned).
+        If no slider_aspect is provided, infer it from the page-bundle image dimensions. */ -}}
+  {{- $tmp := newScratch -}}
+  {{- $tmp.Set "sAspect" (.Get "slider_aspect") -}}
+  {{- if not ($tmp.Get "sAspect") -}}
+    {{- $img := .Page.Resources.GetMatch $rSrc -}}
+    {{- if not $img -}}
+      {{- $img = .Page.Resources.GetMatch $lSrc -}}
+    {{- end -}}
+    {{- with $img -}}
+      {{- $tmp.Set "sAspect" (printf "%d / %d" .Width .Height) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $sAspect := $tmp.Get "sAspect" -}}
 
   <div id="{{ $id }}" class="sc-slider" data-sc-slider="true" data-sc-id="{{ $id }}"
-       style="--pos:{{ $pos }}%;{{ with $gap }}--cmp-gap: {{ . }};{{ end }}{{ with $sHeight }}--slider-height: {{ . }};{{ end }}{{ with $sAspect }}--slider-aspect: {{ . }};{{ end }}">
+       style="--pos:{{ $pos }}%;{{ with $gap }}--cmp-gap: {{ . }};{{ end }}{{ with $sHeight }}--slider-height: {{ . | safeCSS }};{{ end }}{{ with $sAspect }}--slider-aspect: {{ . | safeCSS }};{{ end }}">
     <div class="sc-slider-stage">
+      {{- /* Fallback: if we still have no height/aspect (e.g., images not in the page bundle),
+            add an invisible sizer image so the stage has intrinsic height. */ -}}
+      {{- if and (not $sHeight) (not $sAspect) -}}
+        <img class="sc-sizer" src="{{ $rSrc }}" alt="" aria-hidden="true" loading="lazy"/>
+      {{- end -}}
       <!-- AFTER (base) -->
       <figure class="sc-figure sc-after"
               style="--credit-bg:{{ $rBg | safeCSS }};--credit-color:{{ $rColor | safeCSS }};--credit-align:{{ $rAlign }};">
@@ -207,13 +235,6 @@ params:
 
     <script type="application/json" id="{{ $id }}-cfg">{"pos": {{ $pos }}}</script>
   </div>
-
-  {{ with resources.Get "js/compare-slider.js" }}
-    {{ $built := . | js.Build }}
-    <script defer src="{{ $built.RelPermalink }}"></script>
-  {{ else }}
-    <script defer src="/js/compare-slider.js"></script>
-  {{ end }}
 
 {{ else }}
   {{/* ---------- SIDE-BY-SIDE MODE ---------- */}}

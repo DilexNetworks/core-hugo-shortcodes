@@ -10,6 +10,7 @@
       (resources.Get "css/dx-photo.css")
       (resources.Get "css/dx-code.css")
       (resources.Get "css/dx-bgbox.css")
+      (resources.Get "css/dx-compare.css")
       -}}
     {{- $dxcss := $dx | resources.Concat "css/dx.css" | minify | fingerprint -}}
     <link rel="stylesheet" href="{{ $dxcss.RelPermalink }}">
