@@ -1,0 +1,38 @@
+/* Top navigation */
+.dx-nav{
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(8px);
+  background: color-mix(in srgb, var(--bg, transparent) 85%, transparent);
+}
+
+.dx-nav__inner{
+  display: flex;
+  justify-content: flex-end; /* push menu to the right */
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dx-nav__link{
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 550;
+  letter-spacing: .02em;
+  opacity: .8;
+  padding: .25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.dx-nav__link:hover{
+  opacity: 1;
+}
+
+.dx-nav__link.is-active{
+  opacity: 1;
+  font-weight: 650;
+  border-bottom-color: currentColor;
+}

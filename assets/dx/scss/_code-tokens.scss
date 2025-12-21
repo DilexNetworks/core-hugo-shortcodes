@@ -1,0 +1,28 @@
+/* ========================================================================== */
+/*  dx/code Token Colour Variables                                             */
+/*                                                                            */
+/*  These provide defaults for syntax highlighting.                           */
+/*  Users can override them in their own CSS to customize code block styling. */
+/* ========================================================================== */
+
+:root {
+  /* Base token colours */
+  --dx-code-token-comment: #6a737d;
+  --dx-code-token-keyword: #d73a49;
+  --dx-code-token-string: #032f62;
+  --dx-code-token-function: #6f42c1;
+  --dx-code-token-variable: #e36209;
+  --dx-code-token-number: #005cc5;
+  --dx-code-token-operator: #22863a;
+  --dx-code-token-punctuation: #24292e;
+}
+
+/* Map Chroma token classes to variables */
+.chroma .c  { color: var(--dx-code-token-comment); }
+.chroma .k  { color: var(--dx-code-token-keyword); }
+.chroma .s  { color: var(--dx-code-token-string); }
+.chroma .nf { color: var(--dx-code-token-function); }
+.chroma .nv { color: var(--dx-code-token-variable); }
+.chroma .m  { color: var(--dx-code-token-number); }
+.chroma .o  { color: var(--dx-code-token-operator); }
+.chroma .p  { color: var(--dx-code-token-punctuation); }

@@ -27,11 +27,6 @@
 {{- /* If the shortcode body starts on the next line, strip exactly one leading newline */ -}}
 {{- $code = $code | replaceRE "^\\r?\\n" "" -}}
 
-{{- $opts := "" -}}
-{{- if $linenos -}}
-  {{- $opts = "linenos=true" -}}
-{{- end -}}
-
 <div class="dx-code" data-dx-code>
   {{- if or $title $copy -}}
     <div class="dx-code__bar">
@@ -43,6 +38,15 @@
   {{- end -}}
 
   <div class="dx-code__body" data-dx-code-body>
-    {{ highlight $code $lang $opts }}
+    {{- /* Force Chroma class-based output, then strip language-* so Prism won’t re-tokenize */ -}}
+    {{- $hlOpts := dict "linenos" $linenos "noClasses" false -}}
+    {{- $hl := highlight $code $lang $hlOpts -}}
+
+    {{- /* Prism scans pre/code elements with class language-*, so remove those classes only. */ -}}
+    {{- $hl = $hl | replaceRE "(<pre[^>]*?)\\sclass=\"([^\"]*?)\\blanguage-[^\" ]+([^\"]*?)\"" "$1 class=\"$2$3\"" -}}
+    {{- $hl = $hl | replaceRE "(<code[^>]*?)\\sclass=\"([^\"]*?)\\blanguage-[^\" ]+([^\"]*?)\"" "$1 class=\"$2$3\"" -}}
+    {{- $hl = $hl | replaceRE "\\sdata-lang=\"[^\"]+\"" "" -}}
+
+    {{- $hl | safeHTML -}}
   </div>
 </div>

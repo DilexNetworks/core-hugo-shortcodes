@@ -1,0 +1,86 @@
+/* dx/bgbox
+   - Token-driven component (keys off dx-tokens)
+   - Theme-agnostic
+   - Overrideable via CSS variables
+*/
+
+// Component-local geometry defaults (override-friendly)
+$dx-bgbox-radius: var(--dx-radius, .75rem);
+$dx-bgbox-pad: 1rem;
+
+/* Base component */
+.dx-bgbox {
+  /* Base surface (always-valid fallbacks).
+     Themes can override these via tokens:
+       --dx-surface / --dx-surface-border, or per-variant --dx-*-bg / --dx-*-border.
+  */
+  --dx-bgbox-bg: var(--dx-surface, #f1f5f9);
+  --dx-bgbox-border: var(--dx-surface-border, #cbd5e1);
+
+  border: 1px solid var(--dx-bgbox-border, var(--dx-surface-border, #cbd5e1));
+  background-color: var(--dx-bgbox-bg, var(--dx-surface, #f1f5f9));
+  color: inherit;
+
+  border-radius: $dx-bgbox-radius;
+  padding: $dx-bgbox-pad;
+  margin: 1rem 0;
+}
+
+.dx-bgbox__title {
+  font-weight: 650;
+  margin: 0 0 .5rem 0;
+  opacity: .95;
+}
+
+.dx-bgbox__body > :first-child { margin-top: 0; }
+.dx-bgbox__body > :last-child  { margin-bottom: 0; }
+
+/* Defensive fallback: if only the inner body is rendered, still style it like a box */
+.dx-bgbox__body {
+  /* Only apply the box styling when NOT inside an outer .dx-bgbox */
+  :where(html) &:not(:where(.dx-bgbox .dx-bgbox__body)) {
+    --dx-bgbox-bg: var(--dx-surface, #f1f5f9);
+    --dx-bgbox-border: var(--dx-surface-border, #cbd5e1);
+
+    border: 1px solid var(--dx-bgbox-border);
+    background-color: var(--dx-bgbox-bg);
+    color: inherit;
+
+    border-radius: $dx-bgbox-radius;
+    padding: $dx-bgbox-pad;
+    margin: 1rem 0;
+  }
+}
+
+/* Tone modifiers
+   - Override per-site by redefining these variables:
+     --dx-info-bg, --dx-info-border, etc. (recommended)
+   - Or per-instance via inline style:
+     style="--dx-bgbox-bg: ...; --dx-bgbox-border: ...;"
+*/
+
+/* Neutral uses the base surface tokens explicitly (no self-referential vars). */
+.dx-bgbox--neutral {
+  --dx-bgbox-bg: var(--dx-surface, #f1f5f9);
+  --dx-bgbox-border: var(--dx-surface-border, #cbd5e1);
+}
+
+.dx-bgbox--info {
+  --dx-bgbox-bg: var(--dx-info-bg, var(--dx-bgbox-bg));
+  --dx-bgbox-border: var(--dx-info-border, var(--dx-bgbox-border));
+}
+
+.dx-bgbox--warn {
+  --dx-bgbox-bg: var(--dx-warn-bg, var(--dx-bgbox-bg));
+  --dx-bgbox-border: var(--dx-warn-border, var(--dx-bgbox-border));
+}
+
+.dx-bgbox--danger {
+  --dx-bgbox-bg: var(--dx-danger-bg, var(--dx-bgbox-bg));
+  --dx-bgbox-border: var(--dx-danger-border, var(--dx-bgbox-border));
+}
+
+.dx-bgbox--success {
+  --dx-bgbox-bg: var(--dx-success-bg, var(--dx-bgbox-bg));
+  --dx-bgbox-border: var(--dx-success-border, var(--dx-bgbox-border));
+}

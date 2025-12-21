@@ -1,41 +1,122 @@
+/* dx-tokens.css
+
+   Single CSS entrypoint for the dx shortcode module.
+
+   Goals:
+   - Provide a small, stable token surface (colors, radii, etc.) that dx components key off.
+   - Normalize “dark mode” signals across popular Hugo themes.
+   - Import all dx component styles so consuming sites only need ONE stylesheet.
+
+   Dark-mode signals supported:
+   - Tailwind/Blowfish style:   html.dark (or body.dark)
+   - Attribute toggles:         [data-theme="dark"], [data-scheme="dark"], [data-bs-theme="dark"]
+   - Common custom toggles:     .dark-mode, .theme-dark
+*/
+
+/* --- component imports (keep these first; required by CSS @import rules) --- */
+@import "dx-bgbox.css";
+@import "dx-code.css";
+@import "dx-compare.css";
+@import "dx-nav.css";
+@import "dx-photo.css";
+@import "dx-pullquote.css";
+
+
+/* --- core DX tokens (light defaults) --- */
 :root{
-    /* Shared */
-    --dx-radius: .75rem;
-    --dx-fg: var(--fg, #1f2328);
+  /* Shared design tokens for dx shortcodes.
+     Keep this file small and generic (no shortcode-specific colors here). */
 
-    /* bgbox tones */
-    --dx-bgbox-bg-neutral: #f6f7f8;
-    --dx-bgbox-border-neutral: #d0d7de;
+  /* geometry */
+  --dx-radius: .75rem;
 
-    --dx-bgbox-bg-info: #eef5ff;
-    --dx-bgbox-border-info: #b6d4fe;
+  /* basic foreground/background hooks
+     If the theme provides CSS vars (Tailwind/Blowfish often does), we inherit them.
+     Otherwise, we fall back to sane defaults.
+  */
+  --dx-fg: var(--fg, #1f2328);
+  --dx-bg: var(--bg, #ffffff);
+  --dx-border: var(--border, #e2e8f0);
+  --dx-link: var(--link, #2563eb);
 
-    --dx-bgbox-bg-warn: #fff6e5;
-    --dx-bgbox-border-warn: #f1c232;
+  /* code block hooks (your dx-code.css keys off these) */
+  --dx-code-bg: var(--code-bg, #0b1220);
+  --dx-code-fg: var(--code-fg, #e2e8f0);
 
-    --dx-bgbox-bg-danger: #fdecea;
-    --dx-bgbox-border-danger: #f5a5a5;
+  /* semantic surfaces (generic, shared) */
+  --dx-surface: color-mix(in srgb, var(--dx-bg) 92%, transparent);
+  --dx-surface-border: var(--dx-border);
 
-    --dx-bgbox-bg-success: #edf7ed;
-    --dx-bgbox-border-success: #a6d8a8;
+  /* status tokens (generic; components may opt in) */
+  --dx-info-bg:    #e0f2fe;
+  --dx-info-border:#93c5fd;
+  --dx-warn-bg:    #fef3c7;
+  --dx-warn-border:#f59e0b;
+  --dx-danger-bg:  #fee2e2;
+  --dx-danger-border:#fca5a5;
+  --dx-success-bg: #dcfce7;
+  --dx-success-border:#86efac;
 }
 
+
+/* --- dark mode bridge ----------------------------------------------------
+   IMPORTANT: use :is() (not :where()) so the selector has real specificity.
+   This prevents later light-mode defaults from “winning” in some bundles.
+*/
+:is(html.dark, body.dark,
+    :root[data-theme="dark"], html[data-theme="dark"], body[data-theme="dark"],
+    :root[data-scheme="dark"], html[data-scheme="dark"], body[data-scheme="dark"],
+    :root[data-bs-theme="dark"], html[data-bs-theme="dark"], body[data-bs-theme="dark"],
+    .dark-mode, .theme-dark){
+
+  --dx-fg: var(--fg, #e2e8f0);
+  --dx-bg: var(--bg, #0b1220);
+  --dx-border: var(--border, #1f2a3a);
+
+  /* keep code vars aligned with dark defaults unless theme overrides */
+  --dx-code-bg: var(--code-bg, #0b1220);
+  --dx-code-fg: var(--code-fg, #e2e8f0);
+
+  --dx-surface: color-mix(in srgb, var(--dx-bg) 85%, transparent);
+  --dx-surface-border: var(--dx-border);
+
+  /* status tokens (dark) */
+  --dx-info-bg:       color-mix(in srgb, #60a5fa 18%, var(--dx-bg));
+  --dx-info-border:   color-mix(in srgb, #60a5fa 45%, var(--dx-border));
+  --dx-warn-bg:       color-mix(in srgb, #f59e0b 16%, var(--dx-bg));
+  --dx-warn-border:   color-mix(in srgb, #f59e0b 45%, var(--dx-border));
+  --dx-danger-bg:     color-mix(in srgb, #ef4444 14%, var(--dx-bg));
+  --dx-danger-border: color-mix(in srgb, #ef4444 45%, var(--dx-border));
+  --dx-success-bg:    color-mix(in srgb, #22c55e 14%, var(--dx-bg));
+  --dx-success-border:color-mix(in srgb, #22c55e 40%, var(--dx-border));
+}
+
+
+/* --- optional OS preference fallback -------------------------------------
+   If a theme does NOT provide a toggle and does NOT set any of the above
+   classes/attributes, we can still follow the OS preference.
+
+   This only applies when the page has no explicit theme attribute.
+*/
 @media (prefers-color-scheme: dark){
-  :root{
-    /* bgbox tones (dark) */
-    --dx-bgbox-bg-neutral: #1e232b;
-    --dx-bgbox-border-neutral: #3a4452;
+  :root:not([data-theme]):not([data-scheme]):not([data-bs-theme]){
+    --dx-fg: var(--fg, #e2e8f0);
+    --dx-bg: var(--bg, #0b1220);
+    --dx-border: var(--border, #1f2a3a);
 
-    --dx-bgbox-bg-info: #102a43;
-    --dx-bgbox-border-info: #2b6cb0;
+    --dx-code-bg: var(--code-bg, #0b1220);
+    --dx-code-fg: var(--code-fg, #e2e8f0);
 
-    --dx-bgbox-bg-warn: #2a2113;
-    --dx-bgbox-border-warn: #b7791f;
+    --dx-surface: color-mix(in srgb, var(--dx-bg) 85%, transparent);
+    --dx-surface-border: var(--dx-border);
 
-    --dx-bgbox-bg-danger: #2b171a;
-    --dx-bgbox-border-danger: #c05660;
-
-    --dx-bgbox-bg-success: #15251b;
-    --dx-bgbox-border-success: #2f855a;
+    --dx-info-bg:       color-mix(in srgb, #60a5fa 18%, var(--dx-bg));
+    --dx-info-border:   color-mix(in srgb, #60a5fa 45%, var(--dx-border));
+    --dx-warn-bg:       color-mix(in srgb, #f59e0b 16%, var(--dx-bg));
+    --dx-warn-border:   color-mix(in srgb, #f59e0b 45%, var(--dx-border));
+    --dx-danger-bg:     color-mix(in srgb, #ef4444 14%, var(--dx-bg));
+    --dx-danger-border: color-mix(in srgb, #ef4444 45%, var(--dx-border));
+    --dx-success-bg:    color-mix(in srgb, #22c55e 14%, var(--dx-bg));
+    --dx-success-border:color-mix(in srgb, #22c55e 40%, var(--dx-border));
   }
 }

@@ -1,0 +1,140 @@
+/* ============ Pull Quote ============ */
+.pullquote {
+  /*
+    Token-driven palette.
+    Variants below only override these four values.
+  */
+  --pq-bg: var(--dx-surface, #f1f5f9);
+  --pq-fg: var(--dx-fg, #111827);
+  --pq-accent: var(--dx-border, #cbd5e1);
+
+  /* Fallback; upgraded to color-mix() via @supports below. */
+  --pq-quote: rgba(0, 0, 0, 0.08);
+
+  --pq-shadow: 0 1px 0 rgba(0, 0, 0, 0.06), 0 12px 30px rgba(0, 0, 0, 0.06);
+
+  background: var(--pq-bg);
+
+  color: var(--pq-fg);
+  border-radius: 0.6rem;
+  padding: 1.25rem 1.25rem 1.1rem 1.25rem;
+  margin: 1.5rem auto;
+  box-shadow: var(--pq-shadow);
+  position: relative;
+  z-index: 1;
+}
+
+/* If the shortcode renders as <blockquote>, neutralize theme blockquote borders/padding. */
+blockquote.pullquote,
+blockquote.pullquote__text {
+  border-left: 0 !important;
+  padding-left: 0 !important;
+  margin-left: 0;
+}
+
+/* Some themes style any blockquote with a generic border; keep ours clean. */
+:where(.prose, .content, .post-content) blockquote.pullquote,
+:where(.prose, .content, .post-content) blockquote.pullquote__text {
+  border-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* Left accent stripe (separate element so it does not run under the quote mark) */
+.pullquote::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1.35rem;
+  bottom: 0;
+  width: 4px;
+  background: var(--pq-accent);
+  border-bottom-left-radius: 0.6rem;
+  z-index: 0;
+}
+
+.pullquote__mark {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  top: -16px;
+  left: 12px;
+  fill: var(--pq-quote);
+  z-index: 2;
+}
+
+.pullquote__text {
+  font-size: clamp(1.1rem, 1.2rem + 0.4vw, 1.6rem);
+  line-height: 1.35;
+  margin: 0;
+  border-left: 0;
+  padding-left: 0;
+  font-weight: 600;
+}
+
+.pullquote__author {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+/* Alignment */
+.pullquote--center { margin-left: auto; margin-right: auto; }
+@media (min-width: 768px) {
+  .pullquote--left  { float: left;  margin: 0.5rem 1.25rem 1rem 0;  max-width: 32ch; }
+  .pullquote--right { float: right; margin: 0.5rem 0 1rem 1.25rem; max-width: 32ch; }
+}
+
+/* Variants (token-first)
+   These map to the shared dx palette so sites can re-theme globally.
+*/
+.pullquote--ink {
+  --pq-bg: var(--dx-bg, #ffffff);
+  --pq-fg: var(--dx-fg, #111827);
+  --pq-accent: var(--dx-fg, #111827);
+}
+
+.pullquote--sun {
+  --pq-bg: var(--dx-warn-bg, #fef3c7);
+  --pq-fg: var(--dx-fg, #111827);
+  --pq-accent: var(--dx-warn-border, #f59e0b);
+}
+
+.pullquote--sea {
+  --pq-bg: var(--dx-info-bg, #e0f2fe);
+  --pq-fg: var(--dx-fg, #111827);
+  --pq-accent: var(--dx-info-border, #93c5fd);
+}
+
+.pullquote--mint {
+  --pq-bg: var(--dx-success-bg, #dcfce7);
+  --pq-fg: var(--dx-fg, #111827);
+  --pq-accent: var(--dx-success-border, #86efac);
+}
+
+.pullquote--rose {
+  --pq-bg: var(--dx-danger-bg, #fee2e2);
+  --pq-fg: var(--dx-fg, #111827);
+  --pq-accent: var(--dx-danger-border, #fca5a5);
+}
+
+.pullquote--slate {
+  --pq-bg: var(--dx-surface, #f1f5f9);
+  --pq-fg: var(--dx-fg, #111827);
+  --pq-accent: var(--dx-border, #cbd5e1);
+}
+
+/* Dark mode: rely on dx token bridge for colours; just soften the shadow. */
+:where(html.dark, [data-theme="dark"], [data-scheme="dark"], [data-bs-theme="dark"]) .pullquote {
+  --pq-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+/* Prefer an accent-derived quote mark when supported. */
+@supports (color: color-mix(in srgb, #000 50%, transparent)) {
+  .pullquote {
+    --pq-quote: color-mix(in srgb, var(--pq-accent) 18%, transparent);
+  }
+
+  :where(html.dark, [data-theme="dark"], [data-scheme="dark"], [data-bs-theme="dark"]) .pullquote {
+    --pq-quote: color-mix(in srgb, var(--pq-accent) 25%, transparent);
+  }
+}

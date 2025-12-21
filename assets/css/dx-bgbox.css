@@ -1,134 +1,83 @@
-/* Theme defaults for dx/bgbox (override-friendly)
-   - Users can override any of the --dx-bgbox-* variables in their own CSS.
-   - Defaults adapt to light/dark via data-theme (and OS preference fallback). */
+/* dx/bgbox
+   - Theme switching: Blowfish/Tailwind uses `html.dark`
+   - Override-friendly: users can set any `--dx-bgbox-*` variables in their own CSS
+*/
 
 :root{
-  --dx-bgbox-bg-default: #f8fafc;
-  --dx-bgbox-border-default: #e2e8f0;
-
-  --dx-bgbox-bg-neutral-default: #f1f5f9;
-  --dx-bgbox-border-neutral-default: #e2e8f0;
-
-  --dx-bgbox-bg-info-default: #eff6ff;
-  --dx-bgbox-border-info-default: #bfdbfe;
-
-  --dx-bgbox-bg-warn-default: #fffbeb;
-  --dx-bgbox-border-warn-default: #fcd34d;
-
-  --dx-bgbox-bg-danger-default: #fef2f2;
-  --dx-bgbox-border-danger-default: #fecaca;
-
-  --dx-bgbox-bg-success-default: #ecfdf5;
-  --dx-bgbox-border-success-default: #a7f3d0;
+  --dx-bgbox-radius: var(--dx-radius, .75rem);
+  --dx-bgbox-pad: 1rem;
 }
 
-/* Light mode explicit overrides (when the site sets data-theme="light")
-   These ensure any globally-defined dark tone overrides do not bleed into light mode. */
-:is(:root, html):not(.dark)[data-theme="light"],
-html:not(.dark){
-    --dx-bgbox-bg-neutral: var(--dx-bgbox-bg-neutral-default);
-    --dx-bgbox-border-neutral: var(--dx-bgbox-border-neutral-default);
-
-    --dx-bgbox-bg-info: var(--dx-bgbox-bg-info-default);
-    --dx-bgbox-border-info: var(--dx-bgbox-border-info-default);
-
-    --dx-bgbox-bg-warn: var(--dx-bgbox-bg-warn-default);
-    --dx-bgbox-border-warn: var(--dx-bgbox-border-warn-default);
-
-    --dx-bgbox-bg-danger: var(--dx-bgbox-bg-danger-default);
-    --dx-bgbox-border-danger: var(--dx-bgbox-border-danger-default);
-
-    --dx-bgbox-bg-success: var(--dx-bgbox-bg-success-default);
-    --dx-bgbox-border-success: var(--dx-bgbox-border-success-default);
-}
-
-/* Dark mode defaults */
-:is(:root, html, body)[data-theme="dark"],
-html.dark{
-  --dx-bgbox-bg-default: #0f172a;
-  --dx-bgbox-border-default: #1f2a3a;
-
-  --dx-bgbox-bg-neutral-default: #0b1220;
-  --dx-bgbox-border-neutral-default: #1f2a3a;
-
-  --dx-bgbox-bg-info-default: color-mix(in srgb, #60a5fa 18%, #0b1220);
-  --dx-bgbox-border-info-default: color-mix(in srgb, #60a5fa 45%, #1f2a3a);
-
-  --dx-bgbox-bg-warn-default: color-mix(in srgb, #f59e0b 16%, #0b1220);
-  --dx-bgbox-border-warn-default: color-mix(in srgb, #f59e0b 45%, #1f2a3a);
-
-  --dx-bgbox-bg-danger-default: color-mix(in srgb, #ef4444 14%, #0b1220);
-  --dx-bgbox-border-danger-default: color-mix(in srgb, #ef4444 45%, #1f2a3a);
-
-  --dx-bgbox-bg-success-default: color-mix(in srgb, #22c55e 14%, #0b1220);
-  --dx-bgbox-border-success-default: color-mix(in srgb, #22c55e 40%, #1f2a3a);
-}
-
-/* OS dark preference fallback (when no data-theme override is set) */
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme]){
-    --dx-bgbox-bg-default: #0f172a;
-    --dx-bgbox-border-default: #1f2a3a;
-
-    --dx-bgbox-bg-neutral-default: #0b1220;
-    --dx-bgbox-border-neutral-default: #1f2a3a;
-
-    --dx-bgbox-bg-info-default: color-mix(in srgb, #60a5fa 18%, #0b1220);
-    --dx-bgbox-border-info-default: color-mix(in srgb, #60a5fa 45%, #1f2a3a);
-
-    --dx-bgbox-bg-warn-default: color-mix(in srgb, #f59e0b 16%, #0b1220);
-    --dx-bgbox-border-warn-default: color-mix(in srgb, #f59e0b 45%, #1f2a3a);
-
-    --dx-bgbox-bg-danger-default: color-mix(in srgb, #ef4444 14%, #0b1220);
-    --dx-bgbox-border-danger-default: color-mix(in srgb, #ef4444 45%, #1f2a3a);
-
-    --dx-bgbox-bg-success-default: color-mix(in srgb, #22c55e 14%, #0b1220);
-    --dx-bgbox-border-success-default: color-mix(in srgb, #22c55e 40%, #1f2a3a);
-  }
-}
-
+/* Base component */
 .dx-bgbox{
-    border: 1px solid transparent;
-    border-color: var(--dx-bgbox-border, var(--dx-bgbox-border-default, var(--border, #d0d7de)));
-    background: none;
-    background-color: var(--dx-bgbox-bg, var(--dx-bgbox-bg-default, var(--bg, #ffffff)));
-    color: inherit;
-    border-radius: var(--dx-radius, .75rem);
-    padding: 1rem;
-    margin: 1rem 0;
+  /* Token-based defaults (colors come from dx-tokens.css) */
+  --dx-bgbox-surface: var(--dx-surface, var(--dx-bg, var(--bg, #ffffff)));
+  --dx-bgbox-surface-border: var(--dx-surface-border, var(--dx-border, var(--border, #d0d7de)));
+  --dx-bgbox-bg-default: var(--dx-bgbox-surface);
+  --dx-bgbox-border-default: var(--dx-bgbox-surface-border);
+
+  /* Tone defaults (override-friendly) */
+  --dx-bgbox-neutral-bg: var(--dx-surface, var(--dx-bgbox-surface));
+  --dx-bgbox-neutral-border: var(--dx-surface-border, var(--dx-bgbox-surface-border));
+
+  --dx-bgbox-info-bg: var(--dx-info-bg, var(--dx-bgbox-surface));
+  --dx-bgbox-info-border: var(--dx-info-border, var(--dx-bgbox-surface-border));
+
+  --dx-bgbox-warn-bg: var(--dx-warn-bg, var(--dx-bgbox-surface));
+  --dx-bgbox-warn-border: var(--dx-warn-border, var(--dx-bgbox-surface-border));
+
+  --dx-bgbox-danger-bg: var(--dx-danger-bg, var(--dx-bgbox-surface));
+  --dx-bgbox-danger-border: var(--dx-danger-border, var(--dx-bgbox-surface-border));
+
+  --dx-bgbox-success-bg: var(--dx-success-bg, var(--dx-bgbox-surface));
+  --dx-bgbox-success-border: var(--dx-success-border, var(--dx-bgbox-surface-border));
+
+  border: 1px solid transparent;
+  border-color: var(--dx-bgbox-border, var(--dx-bgbox-border-default));
+  background: none;
+  background-color: var(--dx-bgbox-bg, var(--dx-bgbox-bg-default));
+  color: inherit;
+
+  border-radius: var(--dx-bgbox-radius);
+  padding: var(--dx-bgbox-pad);
+  margin: 1rem 0;
 }
 
 .dx-bgbox__title{
-    font-weight: 650;
-    margin: 0 0 .5rem 0;
-    opacity: .95;
+  font-weight: 650;
+  margin: 0 0 .5rem 0;
+  opacity: .95;
 }
 
 .dx-bgbox__body > :first-child{ margin-top: 0; }
 .dx-bgbox__body > :last-child{ margin-bottom: 0; }
 
-/* Tone modifiers */
+/* Tone modifiers
+   - Users may override these per-site:
+     --dx-bgbox-neutral-bg, --dx-bgbox-neutral-border, etc.
+   - Or per-instance via inline style: `--dx-bgbox-bg: ...; --dx-bgbox-border: ...;`
+*/
 .dx-bgbox--neutral{
-    --dx-bgbox-bg: var(--dx-bgbox-bg-neutral, var(--dx-bgbox-bg-neutral-default, var(--dx-bgbox-bg-default)));
-    --dx-bgbox-border: var(--dx-bgbox-border-neutral, var(--dx-bgbox-border-neutral-default, var(--dx-bgbox-border-default)));
+  --dx-bgbox-bg: var(--dx-bgbox-neutral-bg, var(--dx-bgbox-surface));
+  --dx-bgbox-border: var(--dx-bgbox-neutral-border, var(--dx-bgbox-surface-border));
 }
 
 .dx-bgbox--info{
-    --dx-bgbox-bg: var(--dx-bgbox-bg-info, var(--dx-bgbox-bg-info-default, var(--dx-bgbox-bg-default)));
-    --dx-bgbox-border: var(--dx-bgbox-border-info, var(--dx-bgbox-border-info-default, var(--dx-bgbox-border-default)));
+  --dx-bgbox-bg: var(--dx-bgbox-info-bg, var(--dx-bgbox-surface));
+  --dx-bgbox-border: var(--dx-bgbox-info-border, var(--dx-bgbox-surface-border));
 }
 
 .dx-bgbox--warn{
-    --dx-bgbox-bg: var(--dx-bgbox-bg-warn, var(--dx-bgbox-bg-warn-default, var(--dx-bgbox-bg-default)));
-    --dx-bgbox-border: var(--dx-bgbox-border-warn, var(--dx-bgbox-border-warn-default, var(--dx-bgbox-border-default)));
+  --dx-bgbox-bg: var(--dx-bgbox-warn-bg, var(--dx-bgbox-surface));
+  --dx-bgbox-border: var(--dx-bgbox-warn-border, var(--dx-bgbox-surface-border));
 }
 
 .dx-bgbox--danger{
-    --dx-bgbox-bg: var(--dx-bgbox-bg-danger, var(--dx-bgbox-bg-danger-default, var(--dx-bgbox-bg-default)));
-    --dx-bgbox-border: var(--dx-bgbox-border-danger, var(--dx-bgbox-border-danger-default, var(--dx-bgbox-border-default)));
+  --dx-bgbox-bg: var(--dx-bgbox-danger-bg, var(--dx-bgbox-surface));
+  --dx-bgbox-border: var(--dx-bgbox-danger-border, var(--dx-bgbox-surface-border));
 }
 
 .dx-bgbox--success{
-    --dx-bgbox-bg: var(--dx-bgbox-bg-success, var(--dx-bgbox-bg-success-default, var(--dx-bgbox-bg-default)));
-    --dx-bgbox-border: var(--dx-bgbox-border-success, var(--dx-bgbox-border-success-default, var(--dx-bgbox-border-default)));
+  --dx-bgbox-bg: var(--dx-bgbox-success-bg, var(--dx-bgbox-surface));
+  --dx-bgbox-border: var(--dx-bgbox-success-border, var(--dx-bgbox-surface-border));
 }

@@ -1,0 +1,79 @@
+/* DX design tokens + theme bridge
+   - Defines a small token surface that all dx components use.
+   - Normalizes dark-mode signals across popular Hugo themes.
+   - Keeps component styles theme-agnostic.
+*/
+
+// --- helpers --------------------------------------------------------------
+
+@mixin dx-dark-tokens {
+  --dx-fg: var(--fg, #e2e8f0);
+  --dx-bg: var(--bg, #0b1220);
+  --dx-border: var(--border, #1f2a3a);
+
+  // keep code vars aligned with dark defaults unless theme overrides
+  --dx-code-bg: var(--code-bg, #0b1220);
+  --dx-code-fg: var(--code-fg, #e2e8f0);
+
+  /* Surface defaults (safe everywhere). */
+  --dx-surface: #111827;
+  --dx-surface-border: var(--dx-border);
+
+  // status tokens (dark)
+  --dx-info-bg:        color-mix(in srgb, #60a5fa 18%, var(--dx-bg));
+  --dx-info-border:    color-mix(in srgb, #60a5fa 45%, var(--dx-border));
+  --dx-warn-bg:        color-mix(in srgb, #f59e0b 16%, var(--dx-bg));
+  --dx-warn-border:    color-mix(in srgb, #f59e0b 45%, var(--dx-border));
+  --dx-danger-bg:      color-mix(in srgb, #ef4444 14%, var(--dx-bg));
+  --dx-danger-border:  color-mix(in srgb, #ef4444 45%, var(--dx-border));
+  --dx-success-bg:     color-mix(in srgb, #22c55e 14%, var(--dx-bg));
+  --dx-success-border: color-mix(in srgb, #22c55e 40%, var(--dx-border));
+}
+
+// A selector string we can safely interpolate into :is(...)
+$dx-dark-signals: 'html.dark, body.dark, :root[data-theme="dark"], html[data-theme="dark"], body[data-theme="dark"], :root[data-scheme="dark"], html[data-scheme="dark"], body[data-scheme="dark"], :root[data-bs-theme="dark"], html[data-bs-theme="dark"], body[data-bs-theme="dark"], .dark-mode, .theme-dark';
+
+/* --- core DX tokens (light defaults) --- */
+:root{
+  /* geometry */
+  --dx-radius: .75rem;
+
+  --dx-fg: var(--fg, #1f2328);
+  --dx-bg: var(--bg, #ffffff);
+  --dx-border: var(--border, #e2e8f0);
+  --dx-link: var(--link, #2563eb);
+
+  /* code block hooks (dx-code keys off these) */
+  --dx-code-bg: var(--code-bg, #f8fafc);
+  --dx-code-fg: var(--code-fg, #0f172a);
+
+  /* Surface defaults (safe everywhere). */
+  --dx-surface: #f1f5f9;
+  --dx-surface-border: var(--dx-border);
+
+  /* status tokens (generic; components may opt in) */
+  --dx-info-bg:    #e0f2fe;
+  --dx-info-border:#93c5fd;
+  --dx-warn-bg:    #fef3c7;
+  --dx-warn-border:#f59e0b;
+  --dx-danger-bg:  #fee2e2;
+  --dx-danger-border:#fca5a5;
+  --dx-success-bg: #dcfce7;
+  --dx-success-border:#86efac;
+}
+
+/* --- dark mode bridge ---------------------------------------------------- */
+:is(#{$dx-dark-signals}) {
+  @include dx-dark-tokens;
+}
+
+/* Prefer subtle, theme-tinted surfaces when supported. */
+@supports (background: color-mix(in srgb, #000 50%, #fff)) {
+  :root {
+    --dx-surface: color-mix(in srgb, var(--dx-bg) 96%, #000000);
+  }
+
+  :is(#{$dx-dark-signals}) {
+    --dx-surface: color-mix(in srgb, var(--dx-bg) 88%, #ffffff);
+  }
+}

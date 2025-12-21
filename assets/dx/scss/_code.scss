@@ -1,0 +1,129 @@
+/* ============ dx/code ============ */
+
+:root {
+  --dx-code-bg: var(--dx-surface, var(--dx-bg, var(--bg, #ffffff)));
+  --dx-code-fg: var(--dx-fg, var(--fg, #111827));
+  --dx-code-border: var(--dx-border, var(--border, #d0d7de));
+  --dx-code-bar-bg: color-mix(in srgb, var(--dx-code-bg) 92%, transparent);
+
+  /* Code block uses the surface by default */
+  --dx-code-block-bg: var(--dx-code-bg);
+  --dx-code-block-fg: var(--dx-code-fg);
+}
+
+:where(html.dark, [data-theme="dark"], [data-scheme="dark"], [data-bs-theme="dark"]) {
+  --dx-code-fg: var(--dx-fg, var(--fg, #e2e8f0));
+
+  --dx-code-bg: var(
+                  --dx-surface,
+                  unquote("color-mix(in srgb, var(--dx-bg, var(--bg, #0b1220)) 88%, var(--dx-code-fg) 12%)")
+  );
+
+  --dx-code-border: var(
+                  --dx-surface-border,
+                  unquote("color-mix(in srgb, var(--dx-border, var(--border, #1f2a3a)) 70%, var(--dx-code-fg) 30%)")
+  );
+
+  --dx-code-bar-bg: color-mix(in srgb, var(--dx-code-bg) 85%, transparent);
+
+  --dx-code-block-bg: var(--dx-code-bg);
+  --dx-code-block-fg: var(--dx-code-fg);
+}
+
+.dx-code {
+  background: var(--dx-code-block-bg);
+  border: 1px solid var(--dx-code-border);
+  border-radius: var(--dx-radius, 0.75rem);
+  color: var(--dx-code-block-fg);
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.dx-code__bar {
+  background: color-mix(in srgb, var(--dx-code-block-bg) 92%, transparent);
+  border-bottom: 1px solid var(--dx-code-border);
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0.6rem 0.8rem;
+}
+
+.dx-code__title {
+  font-size: 0.95rem;
+  font-weight: 650;
+  opacity: 0.95;
+}
+
+.dx-code__copy {
+  background: transparent;
+  border: 1px solid var(--dx-code-border);
+  border-radius: 0.5rem;
+  color: var(--dx-code-fg);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  padding: 0.25rem 0.55rem;
+}
+
+.dx-code__copy:hover {
+  border-color: color-mix(in srgb, var(--dx-code-border) 55%, var(--dx-code-fg) 45%);
+}
+
+.dx-code__copy:active {
+  transform: translateY(1px);
+}
+
+.dx-code__copy[aria-pressed="true"],
+.dx-code__copy.is-copied {
+  border-color: color-mix(in srgb, var(--dx-code-border) 40%, var(--dx-code-fg) 60%);
+}
+
+.dx-code__body {
+  background: var(--dx-code-block-bg);
+  color: var(--dx-code-block-fg);
+}
+
+/* Neutralize backgrounds inside the code block (wrappers + pre) */
+.dx-code__body,
+.dx-code__body .chroma,
+.dx-code__body .highlight,
+.dx-code__body .chroma > *,
+.dx-code__body pre {
+  background: var(--dx-code-block-bg) !important;
+  background-color: var(--dx-code-block-bg) !important;
+}
+
+/* Reset spacing for highlight tables */
+.dx-code__body .chroma table,
+.dx-code__body .highlight table {
+  border-spacing: 0 !important;
+  margin: 0 !important;
+}
+
+/* Line numbers (when present) */
+.dx-code__body .chroma table td:first-child pre,
+.dx-code__body .highlight table td:first-child pre {
+  padding-left: 0.85rem;
+  padding-right: 0.75rem;
+}
+
+.dx-code__body pre {
+  margin: 0;
+  padding: 0.9rem 1rem;
+}
+
+.dx-code__body pre code {
+  font-size: 0.9em;
+}
+
+/* Keep line-height consistent for code spans */
+.dx-code__body .chroma pre code > span,
+.dx-code__body .highlight pre code > span {
+  line-height: 1.45;
+}
+
+/* Maintain margin inside prose/content wrappers */
+:where(.prose, .content, .post-content) .dx-code {
+  margin: 1rem 0;
+}
