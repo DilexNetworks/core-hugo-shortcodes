@@ -1,0 +1,36 @@
+{{/*---
+description: "Show current module version (tag) and last updated date from data/version.json."
+usage:
+    - '{{< dx/version >}}'
+    - '{{< dx/version style="info" >}}'
+    - '{{< dx/version title="Dilex dx/ shortcodes" >}}'
+---*/}}
+
+{{- $v := site.Data.version -}}
+{{- $variant := (.Get "style" | default (.Get "variant" | default "info")) -}}
+{{- $title := (.Get "title" | default "Release") -}}
+
+{{- with $v -}}
+  {{- $tag := .tag | default .version | default "" -}}
+  {{- $dateRaw := .date | default .updated | default "" -}}
+  {{- $dateOut := "" -}}
+  {{- if $dateRaw -}}
+    {{- $t := (time $dateRaw) -}}
+    {{- $dateOut = $t.Format "2006-01-02" -}}
+  {{- end -}}
+
+  <div class="dx-bgbox dx-bgbox--{{ $variant }}" role="note" aria-label="Version">
+    <div class="dx-bgbox__title">{{ $title }}</div>
+    <div class="dx-bgbox__body">
+      {{- if $tag -}}
+        <strong>{{ $tag }}</strong>
+      {{- else -}}
+        <strong>Unknown</strong>
+      {{- end -}}
+      {{- if $dateOut -}}
+        <span style="opacity:.8"> ({{ $dateOut }})</span>
+      {{- end -}}
+    </div>
+  </div>
+{{- end -}}
+</file>
