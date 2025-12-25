@@ -49,11 +49,16 @@
         });
       })();
     </script>
-    {{- /* dx SCSS bundle (module assets) */ -}}
+    {{- /* dx SCSS bundle (module assets)
+          NOTE: wrap in `with` so missing assets (or mount issues in CI) don't crash the build. */ -}}
     {{- $dxEntry := "dx/scss/dx.scss" -}}
     {{- $dxOpts := dict "transpiler" "dartsass" "targetPath" "css/dx-bundle.css" -}}
-    {{- $dx := resources.Get $dxEntry | css.Sass $dxOpts | resources.Minify | resources.Fingerprint -}}
-    <link rel="stylesheet" href="{{ $dx.RelPermalink }}" integrity="{{ $dx.Data.Integrity }}" />
+    {{- with resources.Get $dxEntry -}}
+      {{- $dx := . | css.Sass $dxOpts | resources.Minify | resources.Fingerprint -}}
+      <link rel="stylesheet" href="{{ $dx.RelPermalink }}" integrity="{{ $dx.Data.Integrity }}" />
+    {{- else -}}
+      {{- warnf "dx: SCSS entry not found: %q (expected under assets/%s). Check module mounts/imports." $dxEntry $dxEntry -}}
+    {{- end -}}
     <style>
       :root{
         --bg:#ffffff; --fg:#0f172a; --muted:#475569; --border:#e2e8f0;
