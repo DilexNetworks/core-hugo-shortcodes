@@ -2,6 +2,9 @@ baseURL = "https://dilexnetworks.github.io/dilex-hugo-shortcodes/"
 title = "Dilex Hugo Shortcodes"
 disableKinds = ["taxonomy", "term", "RSS", "sitemap", "robotsTXT"]
 
+[params]
+  homeLink = "https://dilexnetworks.github.io/dilex-hugo-shortcodes/"
+
 [markup]
   [markup.highlight]
     codeFences = true
