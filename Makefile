@@ -56,13 +56,10 @@ bump_version:
 	git pull origin $(BRANCH)
 	# Bump the version (patch by default)
 	bump2version $(BUMP_PART)
-	# Now update the VERSION variable
-	VERSION=$$(cat $(VERSION_FILE))
 
 # Generate/refresh Hugo data file with the latest tag and date
 version_json:
 	VTXT=$$(cat $(VERSION_FILE)); \
-	# Root tag (GitHub Release tag) used for version.json metadata
 	TAG="$(TAG_PREFIX)$$VTXT"; \
 	DATE=$$(git log -1 --format=%cs "$$TAG" 2>/dev/null || date +%F); \
 	mkdir -p $(DATA_DIR); \
@@ -93,16 +90,13 @@ create_tag_release:
 	ROOT_TAG="$(TAG_PREFIX)$$VTXT"; \
 	MODULE_TAG="module/$(TAG_PREFIX)$$VTXT"; \
 	\
-	# Create and push both tags (root tag for GitHub Releases; module/ tag for Go submodule)
 	git tag "$$ROOT_TAG"; \
 	git tag "$$MODULE_TAG"; \
 	git push origin "$$ROOT_TAG"; \
 	git push origin "$$MODULE_TAG"; \
 	\
-	# Update data/version.json based on the root tag date
-	$(MAKE) version_json FULL_TAG="$$ROOT_TAG"; \
+	$(MAKE) version_json; \
 	\
-	# Create a GitHub Release for the root tag only
 	gh release create "$$ROOT_TAG" --title "Release $$ROOT_TAG" --notes "New release $$ROOT_TAG"
 
 
