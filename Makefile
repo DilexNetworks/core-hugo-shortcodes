@@ -17,8 +17,20 @@ VERSION_JSON = $(DATA_DIR)/version.json
 # Default target to create a tag and a release
 release: bump_version version_json commit_and_push create_tag_release
 
+# Different release types - release-patch is the default
+release-patch:
+	$(MAKE) BUMP_PART=patch release
+
+release-minor:
+	$(MAKE) BUMP_PART=minor release
+
+release-major:
+	$(MAKE) BUMP_PART=major release
+
+
 check:
-	@echo "Full tag is $(FULL_TAG)"
+	@echo "Root tag is $(FULL_TAG)"
+	@echo "Module tag is module/$(FULL_TAG)"
 
 init:
 	pip install --upgrade pip
@@ -50,6 +62,7 @@ bump_version:
 # Generate/refresh Hugo data file with the latest tag and date
 version_json:
 	VTXT=$$(cat $(VERSION_FILE)); \
+	# Root tag (GitHub Release tag) used for version.json metadata
 	TAG="$(TAG_PREFIX)$$VTXT"; \
 	DATE=$$(git log -1 --format=%cs "$$TAG" 2>/dev/null || date +%F); \
 	mkdir -p $(DATA_DIR); \
@@ -77,19 +90,20 @@ about_commit: version_json
 create_tag_release:
 	# Read version fresh from file to avoid stale Make variables
 	VTXT=$$(cat $(VERSION_FILE)); \
-	FULL_TAG="$(TAG_PREFIX)$$VTXT"; \
-	git tag "$$FULL_TAG"; \
-	git push origin "$$FULL_TAG"; \
-	$(MAKE) version_json FULL_TAG="$$FULL_TAG"; \
-	gh release create "$$FULL_TAG" --title "Release $$FULL_TAG" --notes "New release $$FULL_TAG"
-
-###create_tag_release:
-###	# Create a new tag on the main branch and push it
-###	git tag $(FULL_TAG)
-###	git push origin $(FULL_TAG)
-###
-###	# Create a new GitHub release with the pushed tag
-###	gh release create $(FULL_TAG) --title "Release $(FULL_TAG)" --notes "New release $(FULL_TAG)"
+	ROOT_TAG="$(TAG_PREFIX)$$VTXT"; \
+	MODULE_TAG="module/$(TAG_PREFIX)$$VTXT"; \
+	\
+	# Create and push both tags (root tag for GitHub Releases; module/ tag for Go submodule)
+	git tag "$$ROOT_TAG"; \
+	git tag "$$MODULE_TAG"; \
+	git push origin "$$ROOT_TAG"; \
+	git push origin "$$MODULE_TAG"; \
+	\
+	# Update data/version.json based on the root tag date
+	$(MAKE) version_json FULL_TAG="$$ROOT_TAG"; \
+	\
+	# Create a GitHub Release for the root tag only
+	gh release create "$$ROOT_TAG" --title "Release $$ROOT_TAG" --notes "New release $$ROOT_TAG"
 
 
 
