@@ -4,6 +4,7 @@ disableKinds = ["taxonomy", "term", "RSS", "sitemap", "robotsTXT"]
 
 [params]
   homeLink = "https://dilexnetworks.github.io/dilex-hugo-shortcodes/"
+  repo = "https://github.com/DilexNetworks/dilex-hugo-shortcodes"
 
 [markup]
   [markup.highlight]
