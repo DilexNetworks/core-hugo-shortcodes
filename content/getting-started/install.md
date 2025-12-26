@@ -1,6 +1,6 @@
 ---
 title: "Install"
-summary: how to use this module
+summary: How to use this module (and contribute)
 ---
 
 ## Install
@@ -62,12 +62,48 @@ If you only need a single shortcode (for example `dx/photo`):
 
 This works, but you’ll need to manually track updates.
 
+
 ### Running the docs site locally
 
 This repository is itself a runnable Hugo site. To explore the examples:
 
 ```bash
-hugo server -D
+make server
 ```
 
 This is the easiest way to understand how the shortcodes behave before integrating them into another project.
+
+## Getting Started for Contributors
+
+If you plan to hack on the shortcodes (SCSS/CSS, JS, templates), it helps to run the docs site in a way that:
+
+- binds to all interfaces (so you can hit it from your phone/tablet on the same network), and
+- sets `baseURL` correctly for the current machine.
+
+### Use the Makefile target
+
+If you have the repo checked out locally, the easiest way is:
+
+```bash
+make server
+```
+
+This repo’s `server` target discovers your current LAN IP and runs Hugo like:
+
+```bash
+hugo server -D \
+  --disableFastRender --ignoreCache \
+  --config hugo.toml \
+  --bind 0.0.0.0 \
+  --baseURL=http://<YOUR-IP>:1313/
+```
+
+### One-off baseURL override
+
+If you just want to run locally (without the Makefile), you can override the configured `baseURL` at runtime:
+
+```bash
+hugo server -D --baseURL http://localhost:1313/
+```
+
+This does **not** change your committed config and keeps GitHub Pages URLs intact.
