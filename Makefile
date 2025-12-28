@@ -54,9 +54,21 @@ check_up_to_date:
 	[ "$$l" = "$$r" ] || { echo "❌ $(BRANCH) is not up to date with origin/$(BRANCH)"; exit 2; }
 
 check_tags:
-	@V=$$(cat $(VERSION_FILE)); \
-	ROOT="$(TAG_PREFIX)$$V"; \
-	MOD="module/$(TAG_PREFIX)$$V"; \
+	@CUR=$$(tr -d ' \t\n\r' < $(VERSION_FILE) 2>/dev/null || true); \
+	if [ -z "$$CUR" ]; then \
+	  echo "❌ $(VERSION_FILE) is empty or missing"; \
+	  exit 2; \
+	fi; \
+	IFS='.' read -r MA MI PA <<< "$$CUR"; \
+	case "$(RELEASE)" in \
+	  major) MA=$$((10#$$MA + 1)); MI=0; PA=0 ;; \
+	  minor) MI=$$((10#$$MI + 1)); PA=0 ;; \
+	  patch) PA=$$((10#$$PA + 1)) ;; \
+	  *) echo "❌ Invalid RELEASE type: '$(RELEASE)'"; echo "   Valid values: patch, minor, major"; exit 2 ;; \
+	esac; \
+	NEXT="$$MA.$$MI.$$PA"; \
+	ROOT="$(TAG_PREFIX)$$NEXT"; \
+	MOD="module/$(TAG_PREFIX)$$NEXT"; \
 	git rev-parse "$$ROOT" >/dev/null 2>&1 && { echo "❌ Tag $$ROOT already exists"; exit 2; } || true; \
 	git rev-parse "$$MOD"  >/dev/null 2>&1 && { echo "❌ Tag $$MOD already exists"; exit 2; } || true
 
