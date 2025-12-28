@@ -5,6 +5,9 @@ Reusable, theme‑friendly Hugo shortcodes designed to make documentation and co
 **Latest release:** `v{{ .Site.Data.version.tag }}` — {{ .Site.Data.version.date }}  
 📖 **Documentation:** https://dilexnetworks.github.io/dilex-hugo-shortcodes/
 
+[![Release](https://img.shields.io/github/v/release/DilexNetworks/dilex-hugo-shortcodes?display_name=tag&sort=semver)](https://github.com/DilexNetworks/dilex-hugo-shortcodes/releases/latest)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://dilexnetworks.github.io/dilex-hugo-shortcodes/)
+
 ---
 
 ## What is this?
