@@ -36,7 +36,6 @@ check_version:
 	  echo "❌ $(VERSION_FILE) is empty or missing"; \
 	  exit 2; \
 	fi; \
-	# Strict SemVer: X.Y.Z (numbers only)
 	if ! echo "$$V" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$$'; then \
 	  echo "❌ $(VERSION_FILE) must contain a SemVer like 1.2.3 (got: '$$V')"; \
 	  exit 2; \
