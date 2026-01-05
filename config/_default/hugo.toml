@@ -1,5 +1,5 @@
 baseURL = "https://dilexnetworks.github.io/core-hugo-shortcodes/"
-title = "Dilex Hugo Shortcodes"
+title = "Core Hugo Shortcodes"
 disableKinds = ["taxonomy", "term", "RSS", "sitemap", "robotsTXT"]
 
 [params]
