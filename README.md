@@ -1,19 +1,19 @@
-# Dilex Hugo Shortcodes (`dilex-hugo-shortcodes`)
+# Core Hugo Shortcodes (`core-hugo-shortcodes`)
 
-[![Release](https://img.shields.io/github/v/release/DilexNetworks/dilex-hugo-shortcodes?display_name=tag&sort=semver)](https://github.com/DilexNetworks/dilex-hugo-shortcodes/releases/latest)
-[![License](https://img.shields.io/github/license/DilexNetworks/dilex-hugo-shortcodes)](LICENSE)
-[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://dilexnetworks.github.io/dilex-hugo-shortcodes/)
+[![Release](https://img.shields.io/github/v/release/DilexNetworks/core-hugo-shortcodes?display_name=tag&sort=semver)](https://github.com/DilexNetworks/core-hugo-shortcodes/releases/latest)
+[![License](https://img.shields.io/github/license/DilexNetworks/core-hugo-shortcodes)](LICENSE)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://dilexnetworks.github.io/core-hugo-shortcodes/)
 
 Reusable, theme‑friendly Hugo shortcodes designed to make documentation and content‑heavy sites easier to build and maintain.
 
-📖 **Documentation:** https://dilexnetworks.github.io/dilex-hugo-shortcodes/
+📖 **Documentation:** https://dilexnetworks.github.io/core-hugo-shortcodes/
 
 
 ---
 
 ## What is this?
 
-`dilex-hugo-shortcodes` is a curated collection of production‑ready Hugo shortcodes with a strong focus on:
+`core-hugo-shortcodes` is a curated collection of production‑ready Hugo shortcodes with a strong focus on:
 
 - **Clean, composable markup**
 - **Light / dark mode compatibility**
@@ -39,8 +39,8 @@ The shortcodes are namespaced (`dx/*`) to avoid collisions and are designed to w
 ## Getting started (local development)
 
 ```bash
-git clone https://github.com/DilexNetworks/dilex-hugo-shortcodes.git
-cd dilex-hugo-shortcodes
+git clone https://github.com/DilexNetworks/core-hugo-shortcodes.git
+cd core-hugo-shortcodes
 hugo server -D
 ```
 
@@ -58,7 +58,7 @@ This runs the built‑in documentation site locally.
 - **`dx/version`** — Displays the current release version and date
 
 See the full documentation for usage examples and configuration options:
-👉 https://dilexnetworks.github.io/dilex-hugo-shortcodes/
+👉 https://dilexnetworks.github.io/core-hugo-shortcodes/
 
 ---
 

@@ -23,7 +23,7 @@ hugo mod init example.com/your-site
 ```toml
 [module]
   [[module.imports]]
-    path = "github.com/DilexNetworks/dilex-hugo-shortcodes/module"
+    path = "github.com/DilexNetworks/core-hugo-shortcodes/module"
 ```
 
 3) Fetch dependencies:
@@ -92,7 +92,7 @@ Hugo modules are versioned and cached. When a new release of this module is publ
 To update **this module only** to the latest version:
 
 ```bash
-hugo mod get -u github.com/DilexNetworks/dilex-hugo-shortcodes/module
+hugo mod get -u github.com/DilexNetworks/core-hugo-shortcodes/module
 hugo mod tidy
 ```
 
@@ -108,7 +108,7 @@ If you prefer strict version pinning, you can lock to a specific release in your
 ```toml
 [module]
   [[module.imports]]
-    path = "github.com/DilexNetworks/dilex-hugo-shortcodes/module"
+    path = "github.com/DilexNetworks/core-hugo-shortcodes/module"
     version = "v0.2.3"
 ```
 
@@ -119,7 +119,7 @@ In that case, updating means changing the version string explicitly.
 If you don’t want to use Hugo modules, you can add this repo as a git submodule:
 
 ```bash
-git submodule add https://github.com/DilexNetworks/dilex-hugo-shortcodes.git modules/dx-shortcodes
+git submodule add https://github.com/DilexNetworks/core-hugo-shortcodes.git modules/dx-shortcodes
 ```
 
 From there you can either:

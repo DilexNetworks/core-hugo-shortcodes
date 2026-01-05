@@ -1,10 +1,10 @@
-baseURL = "https://dilexnetworks.github.io/dilex-hugo-shortcodes/"
+baseURL = "https://dilexnetworks.github.io/core-hugo-shortcodes/"
 title = "Dilex Hugo Shortcodes"
 disableKinds = ["taxonomy", "term", "RSS", "sitemap", "robotsTXT"]
 
 [params]
-  homeLink = "https://dilexnetworks.github.io/dilex-hugo-shortcodes/"
-  repo = "https://github.com/DilexNetworks/dilex-hugo-shortcodes"
+  homeLink = "https://dilexnetworks.github.io/core-hugo-shortcodes/"
+  repo = "https://github.com/DilexNetworks/core-hugo-shortcodes"
 
 [markup]
   [markup.highlight]
@@ -16,7 +16,7 @@ disableKinds = ["taxonomy", "term", "RSS", "sitemap", "robotsTXT"]
 
 [module]
   [[module.imports]]
-    path = "github.com/DilexNetworks/dilex-hugo-shortcodes/module"
+    path = "github.com/DilexNetworks/core-hugo-shortcodes/module"
 
 [menus]
   [[menus.main]]
